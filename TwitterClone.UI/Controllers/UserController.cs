@@ -13,8 +13,7 @@ namespace TwitterClone.UI.Controllers
         //[ActionName("User")]
         public ActionResult Index()
         {
-            UserModel model = new UserModel();
-            return View("User", model);
+            return View();
         }
     }
 }

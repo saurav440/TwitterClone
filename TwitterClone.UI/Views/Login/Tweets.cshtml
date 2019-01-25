@@ -1,0 +1,74 @@
+﻿
+@{
+    ViewBag.Title = "My Twitter Clone";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<div id="page-container" class="container">
+    <div class="row pt-md-5" >
+        <div class="col-xs-12 col-md-3 timeline-tweet-box">
+            <div class="pb-md-3">
+                <label for="name"> Saurav</label><br/>
+            </div>
+            <div class="cardStats">
+                <ul class="list-group">
+                   <li class=" d-flex  align-items-center">
+                    <span class="badge badge-info mr-2">4</span> Tweets
+                   </li>
+                    <li class=" d-flex  align-items-center">
+                    <span class="badge badge-info mr-2">3</span> Followings
+                    </li>
+                    <li class=" d-flex  align-items-center">
+                    <span class="badge badge-info mr-2">2</span> Followers
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="main" class="col-md-9">
+            <div id="tweet-box-divs">
+                <div class="tweet-box">
+                    <textarea rows="4" placeholder="What's happening'?" class="outline-border"></textarea>
+                </div>
+                <div id="update-btn-divs" class="pt-2 offset-11">
+                    <button class="btn btn-sm btn-info">Update</button>
+                </div>
+            </div>
+            <div id="tweet-list" class="pt-2">
+                @*<span class="font-weight-bold">Tweets</span>*@
+                <h4>Tweets</h4>
+                <div id="tbl-tweet" class="pt-2">
+                    <table class="table table-borderless table-striped outline-border">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="width: 12%"></th>
+                                <th scope="col" style="width: 60%"></th>
+                                <th scope="col" style="width: 13%"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="">saurav</td>
+                                <td class="">Jacobfhdhlkjlk fjhdkljfadklfjad </td>
+                                <td class="">11:20 AM</td>
+                            </tr>
+                            <tr>
+                                <td>aayanshv</td>
+                                <td class="">fdafdjkgfakfdkhfdkl;hf;adldjfa</td>
+                                <td class="">11:10 AM</td>
+                               
+                            </tr>
+                            <tr>
+                                <td>aayansh</td>
+                                <td class="">Jacobfjadlkjf afjhadklsfh;a dfjkhads;kfh;asdl kdfjh;a</td>
+                                <td class="">4 May 2018</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+</div>

@@ -1,6 +1,7 @@
 ﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+    /*padding-top: 50px;
+    padding-bottom: 20px;*/
+    background-color: #e1e0db;
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -18,9 +19,22 @@
 
 /* Set width on the form input elements since they're 100% wide by default */
 input,
-select,
-textarea {
+select
+ {
     max-width: 280px;
+}
+textarea {
+    width: 100%;
+}
+.outline-border {
+    outline: 1px auto #333232;
+    border-radius: 6px 6px 6px 6px;
+}
+.body-content {
+    background-color: white ;
+}
+.search-border {
+    border-radius: 100px;
 }
 .card-signin {
     border: 0;
@@ -35,3 +49,21 @@ textarea {
 .card-signin .card-body {
         padding: 2rem;
 }
+/*.module {
+    background-clip: padding-box;
+    border: 0;
+    position: relative;
+    margin-bottom: 10px;
+}*/
+.cardStats {
+    padding-bottom: 16px;
+    padding-right: 16px;
+    padding-top:16px;
+}
+.timeline-tweet-box {
+    /*border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+    border: 1px solid #e6ecf0;*/
+    max-width:20%;
+}
+
