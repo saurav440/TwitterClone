@@ -65,6 +65,9 @@ textarea {
    margin-top:4px;
    font-size:large;
    padding-left:15px
-  
+}
+.tbl-tweet {
+    height: 100%;
+    overflow-y: scroll;
 }
 

@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitterClone.DAL", "Twitter
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitterClone.UI", "TwitterClone.UI\TwitterClone.UI.csproj", "{00301A37-A5D5-4CCA-8858-01954AD92E16}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitterClone.Entity", "TwitterClone.Entity\TwitterClone.Entity.csproj", "{DB95B5A7-CAE5-4FB8-8866-F549485A60F4}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{00301A37-A5D5-4CCA-8858-01954AD92E16}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00301A37-A5D5-4CCA-8858-01954AD92E16}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{00301A37-A5D5-4CCA-8858-01954AD92E16}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DB95B5A7-CAE5-4FB8-8866-F549485A60F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DB95B5A7-CAE5-4FB8-8866-F549485A60F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DB95B5A7-CAE5-4FB8-8866-F549485A60F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DB95B5A7-CAE5-4FB8-8866-F549485A60F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

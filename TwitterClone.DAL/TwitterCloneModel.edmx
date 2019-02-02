@@ -69,25 +69,8 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Function Name="UpdateProfile" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="UserId" Type="varchar" Mode="In" />
-          <Parameter Name="Name" Type="varchar" Mode="In" />
-          <Parameter Name="Email" Type="varchar" Mode="In" />
-          <Parameter Name="Password" Type="varchar" Mode="In" />
-        </Function>
-        <Function Name="uspDeactivateAccount" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="UserId" Type="varchar" Mode="In" />
-        </Function>
         <Function Name="uspDeleteAccount" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="UserId" Type="varchar" Mode="In" />
-        </Function>
-        <Function Name="uspGetTweet" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="UserId" Type="varchar" Mode="In" />
-        </Function>
-        <Function Name="uspInsertTweet" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="UserId" Type="varchar" Mode="In" />
-          <Parameter Name="Message" Type="varchar" Mode="In" />
-          <Parameter Name="TwetId" Type="varchar" Mode="In" />
         </Function>
         <EntityContainer Name="TwitterCloneDBModelStoreContainer">
           <EntitySet Name="Following" EntityType="Self.Following" Schema="dbo" store:Type="Tables" />
@@ -261,20 +244,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="uspDeleteAccount" FunctionName="TwitterCloneDBModel.Store.uspDeleteAccount" />
-          <FunctionImportMapping FunctionImportName="uspGetTweet" FunctionName="TwitterCloneDBModel.Store.uspGetTweet">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="TwitterCloneDBModel.uspGetTweet_Result">
-                <ScalarProperty Name="tweet_id" ColumnName="tweet_id" />
-                <ScalarProperty Name="user_id" ColumnName="user_id" />
-                <ScalarProperty Name="message" ColumnName="message" />
-                <ScalarProperty Name="created" ColumnName="created" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="uspInsertTweet" FunctionName="TwitterCloneDBModel.Store.uspInsertTweet" />
-          <FunctionImportMapping FunctionImportName="UpdateProfile" FunctionName="TwitterCloneDBModel.Store.UpdateProfile" />
-          <FunctionImportMapping FunctionImportName="uspDeactivateAccount" FunctionName="TwitterCloneDBModel.Store.uspDeactivateAccount" />
-        </EntityContainerMapping>
+          </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>

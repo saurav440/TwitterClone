@@ -87,20 +87,35 @@ namespace TwitterClone.BAL
             }
         }
 
-        public IEnumerable<Tweet> GetAllTweet(string id)
+        public IEnumerable<Tweet> GetTotalTweetByUser(string id)
         {
             TwitterCloneDBEntities db = new TwitterCloneDBEntities();
-            return db.Tweets.Where(x => x.user_id == id).OrderByDescending(o =>o.created);
+            return db.Tweets.Where(x => x.user_id.ToUpper() == id.ToUpper()).OrderByDescending(o =>o.created);
         }
+
+        public IEnumerable<Tweet> GetAllTweetList(string id)
+        {
+            List<Tweet> tweetList = new List<Tweet>();
+
+            TwitterCloneDBEntities db = new TwitterCloneDBEntities();
+
+            var followingList = db.Followings.Where(x => x.User_id.ToUpper() == id.ToUpper())
+                                              .Select(x => x.Following_id).ToList();
+
+            return db.Tweets.Where(tweet => followingList.Contains(tweet.user_id) || tweet.user_id == id)
+                            .OrderByDescending(o => o.created);
+            
+        }
+
         public List<Following> GetAllFollowing(string userid)
         {
             TwitterCloneDBEntities db = new TwitterCloneDBEntities();
-            return db.Followings.Where(x => x.User_id == userid).ToList();
+            return db.Followings.Where(x => x.User_id.ToUpper() == userid.ToUpper()).ToList();
         }
         public List<Following> GetAllFollowers(string userid)
         {
             TwitterCloneDBEntities db = new TwitterCloneDBEntities();
-            return db.Followings.Where(x => x.Following_id == userid).ToList();
+            return db.Followings.Where(x => x.Following_id.ToUpper() == userid.ToUpper()).ToList();
         }
         public void DeleteAccount(string userid)
         {
@@ -147,7 +162,7 @@ namespace TwitterClone.BAL
         {
             using (TwitterCloneDBEntities db = new TwitterCloneDBEntities())
             {
-                var result = db.Followings.Where(x => x.User_id == userid && x.Following_id == followingId).FirstOrDefault();
+                var result = db.Followings.Where(x => x.User_id.ToUpper() == userid.ToUpper() && x.Following_id.ToUpper() == followingId.ToUpper()).FirstOrDefault();
                 db.Followings.Remove(db.Followings.Find(result.Rowid));
                 db.SaveChanges();
             }

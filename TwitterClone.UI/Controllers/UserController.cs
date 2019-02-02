@@ -14,12 +14,12 @@ namespace TwitterClone.UI.Controllers
     public class UserController : Controller
     {
         TwitterCloneBO obj = new TwitterCloneBO();
-       
+
         public ActionResult Index()
         {
             return View();
         }
-        
+
         [HttpPost]
         public JsonResult SaveMessage(Tweet item)
         {
@@ -31,7 +31,7 @@ namespace TwitterClone.UI.Controllers
                 created = DateTime.Now
             };
 
-             obj.SaveTweets(tweetObj);
+            obj.SaveTweets(tweetObj);
             return Json(new { Userid = item.UserId }, JsonRequestBehavior.AllowGet);
         }
 
@@ -40,15 +40,16 @@ namespace TwitterClone.UI.Controllers
         public ActionResult TwitterDashboard(string id)
         {
             TwitterCloneModel viewModel = new TwitterCloneModel();
-            if(Session["UserId"] != null)
+            if (Session["UserId"] != null)
             {
                 var userDetails = obj.GetUserDetails(id);
+
                 var tweetList = BuildTweetList(id);
 
                 Session["UserName"] = userDetails.FullName;
 
                 viewModel.UserName = userDetails.User_id;
-                viewModel.Tweets = tweetList.Count;
+                viewModel.Tweets = obj.GetTotalTweetByUser(id).ToList().Count;
                 viewModel.Followings = obj.GetAllFollowing(id).Count;
                 viewModel.Followers = obj.GetAllFollowers(id).Count;
                 viewModel.TweetList = tweetList;
@@ -73,22 +74,22 @@ namespace TwitterClone.UI.Controllers
                 obj.DeleteTweet(tweetId);
                 success = true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 HandleErrorInfo obj = new HandleErrorInfo(ex, "User", "DeleteTweet");
                 Logger.WriteLog(obj);
             }
-            
+
             return Json(new { Success = success }, JsonRequestBehavior.AllowGet);
         }
-        
+
         public JsonResult Search(string name)
         {
             List<PersonDetail> searchList = new List<PersonDetail>();
 
-            var userid = Convert.ToString(Session["UserId"]); 
+            var userid = Convert.ToString(Session["UserId"]);
 
-            var result =  obj.GetSearchList(name);
+            var result = obj.GetSearchList(name);
             var followingList = obj.GetAllFollowing(userid);
 
             foreach (var item in result)
@@ -96,18 +97,20 @@ namespace TwitterClone.UI.Controllers
                 PersonDetail obj = new PersonDetail();
                 obj.Name = item.FullName;
                 obj.UserName = item.User_id;
-                obj.IsFollowing = followingList.Count > 0 ? 
-                                  followingList.Any(x =>x.Following_id == item.User_id) : false ;
+                obj.IsFollowing = followingList.Count > 0 ?
+                                  followingList.Any(x => x.Following_id == item.User_id) : false;
+
+                obj.IsSelfUser = item.User_id == userid ? true :false ;
 
                 searchList.Add(obj);
             }
             return Json(searchList, JsonRequestBehavior.AllowGet);
-            
+
         }
         [Route("Follow/{followingId}")]
         public ActionResult Follow(string followingId)
         {
-            var userid = Convert.ToString(Session["UserId"]); 
+            var userid = Convert.ToString(Session["UserId"]);
 
             obj.FollowUser(userid, followingId);
             return RedirectToAction("Dashboard", new { id = userid });
@@ -122,12 +125,12 @@ namespace TwitterClone.UI.Controllers
             return RedirectToAction("Dashboard", new { id = userid });
         }
 
-        private List<Tweet> BuildTweetList(string useid)
+        private List<Tweet> BuildTweetList(string userid)
         {
             List<Tweet> tweetList = new List<Tweet>();
 
-            var response = obj.GetAllTweet(useid).ToList();
-            
+            var response = obj.GetAllTweetList(userid).ToList();
+
             foreach (var item in response)
             {
                 Tweet tweetObj = new Tweet();
@@ -135,8 +138,9 @@ namespace TwitterClone.UI.Controllers
                 tweetObj.UserId = item.user_id;
                 tweetObj.Message = item.message;
                 tweetObj.TweetId = item.tweet_id;
+                tweetObj.IsSelf = item.user_id.ToLower() == userid.ToLower() ? true : false;
 
-                if(item.created.ToString("MM/dd/yyyy") == DateTime.Now.ToString("MM/dd/yyyy"))
+                if (item.created.ToString("MM/dd/yyyy") == DateTime.Now.ToString("MM/dd/yyyy"))
                 {
                     tweetObj.CreatedDate = item.created.ToString("hh:mm tt");
                 }

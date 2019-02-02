@@ -19,14 +19,14 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
             </div>
-            <div class="navbar-collapse collapse"id="navbarNavAltMarkup">
-                <label id="user-name" for="name" > 
+            <div class="navbar-collapse collapse" id="navbarNavAltMarkup">
+                <label id="user-name" for="name">
                     Welcome @Request.RequestContext.HttpContext.Session["UserName"] (@Request.RequestContext.HttpContext.Session["UserId"])
                 </label>
             </div>
             <ul class="nav navbar-nav">
                 <li>
-                   <a class="nav-item nav-link" href="@Url.Action("Dashboard","User")">Home</a>
+                    <a class="nav-item nav-link" href="@Url.Action("Dashboard","User")">Home</a>
                 </li>
                 <li>
                     <a class="nav-item nav-link" href="@Url.Action("EditProfile","Admin")">Profile</a>
@@ -34,7 +34,6 @@
                 <li>
                     <a class="nav-item nav-link" href="@Url.Action("Signout","Login")">Signout</a>
                 </li>
-                @*<li>@Html.ActionLink("Signout", "Signout", "Login", new { @class = "nav-item nav-link" })</li>*@
             </ul>
         </div>
     </nav>
@@ -46,7 +45,7 @@
         </footer>
     </div>
 
-   
+
     @RenderSection("scripts", required: false)
 </body>
 </html>

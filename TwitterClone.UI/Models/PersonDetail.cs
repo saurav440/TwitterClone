@@ -10,5 +10,6 @@ namespace TwitterClone.UI.Models
         public string UserName { get; set; }
         public string Name { get; set; }
         public bool IsFollowing { get; set; }
+        public bool IsSelfUser { get; set; }
     }
 }

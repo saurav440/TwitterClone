@@ -74,9 +74,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>TwitterCloneModel.edmx</DependentUpon>
     </Compile>
-    <Compile Include="uspGetTweet_Result.cs">
-      <DependentUpon>TwitterCloneModel.tt</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

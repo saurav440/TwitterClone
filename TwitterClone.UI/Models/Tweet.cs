@@ -11,5 +11,6 @@ namespace TwitterClone.UI.Models
         public string UserId { get; set; }
         public string Message { get; set; }
         public string CreatedDate { get; set; }
+        public bool IsSelf { get; set; }
     }
 }
