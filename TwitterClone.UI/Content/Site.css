@@ -49,21 +49,22 @@ textarea {
 .card-signin .card-body {
         padding: 2rem;
 }
-/*.module {
-    background-clip: padding-box;
-    border: 0;
-    position: relative;
-    margin-bottom: 10px;
-}*/
+
 .cardStats {
     padding-bottom: 16px;
     padding-right: 16px;
     padding-top:16px;
 }
 .timeline-tweet-box {
-    /*border-top-left-radius: inherit;
-    border-top-right-radius: inherit;
-    border: 1px solid #e6ecf0;*/
     max-width:20%;
+}
+#user-name{
+    padding-right:15px;
+    font-weight:bold;
+    color :white;
+   margin-top:4px;
+   font-size:large;
+   padding-left:15px
+  
 }
 

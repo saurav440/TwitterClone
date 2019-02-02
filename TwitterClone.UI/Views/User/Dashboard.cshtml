@@ -1,0 +1,230 @@
+﻿@model TwitterClone.UI.Models.TwitterCloneModel
+
+@{
+    ViewBag.Title = "My Twitter Clone";
+}
+<h2 class="text-center">@ViewBag.Title</h2>
+<div id="page-container" class="container">
+    <div class="row pt-md-5">
+        <div class="col-xs-12 col-md-3 timeline-tweet-box">
+            <div class="pb-md-3">
+                Follow
+                @*<div class="input-group my-2">
+                        <input id="searchperson" class="form-control mr-sm-2 search-border border-right-0 border" type="search" placeholder="search person" value="" >
+                        <span class="input-group-append">
+                            <button class="btn btn-outline-secondary border-left-0 border search-border" type="button">
+                                <i class="glyphicon glyphicon-search"></i>
+                            </button>
+                        </span>
+                    </div>*@
+                <div class=" my-2">
+                    @*<input id="searchperson" class="form-control mr-sm-2 rounded-pill" type="text" placeholder="search person" data-toggle="tooltip" data-placement="bottom" data-html="true" title="">*@
+                    @*<select id="searchperson" class="form-control mr-sm-2" style="width:100%">
+                            <option>Seleat </option>
+                            <option>Seleat1 </option>
+                        </select>*@
+                    <select id="searchperson" class="js-example-data-ajax form-control mr-sm-2" style="width:100%"></select>
+                </div>
+            </div>
+            <div class="cardStats">
+                <ul class="list-group">
+                    <li class=" d-flex  align-items-center">
+                        <span class="badge badge-info mr-2">@Model.Tweets</span> Tweets
+                    </li>
+                    <li class=" d-flex  align-items-center">
+                        <span class="badge badge-info mr-2">@Model.Followings</span> Followings
+                    </li>
+                    <li class=" d-flex  align-items-center">
+                        <span class="badge badge-info mr-2">@Model.Followers</span> Followers
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="main" class="col-md-9">
+            <div id="tweet-box-divs">
+                <div class="tweet-box">
+                    <textarea id="tweet-message" rows="4" placeholder="What's happening'?" class="outline-border" maxlength="140"></textarea>
+                    <span id="charremaining">140</span> characters remaining.
+                </div>
+                <div id="update-btn-divs" class="offset-11">
+                    <button id="tweet-button" class="btn btn-sm btn-info">Tweet</button>
+                </div>
+            </div>
+            <div id="tweet-list" class="pt-2">
+                <h4>Tweets</h4>
+                <div id="tbltweetDiv" class="pt-2">
+                    <table id="tbl-tweet" class="table table-borderless table-striped outline-border">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="width: 12%"></th>
+                                <th scope="col" style="width: 60%"></th>
+                                <th scope="col" style="width: 13%"></th>
+                                <th class="d-none"></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.TweetList)
+                            {
+                                <tr>
+                                    <td class="edit">@item.UserId</td>
+                                    <td class="message edit">@item.Message </td>
+                                    <td class="edit">@item.CreatedDate</td>
+                                    <td class="d-none tweetid edit">@item.TweetId</td>
+                                    <td>
+                                        <input id="delete-button" type="button" class="btn btn-sm btn-danger delete" value="Delete" />
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <input id="hdn-tweet-id" type="hidden" value="0" />
+        </div>
+    </div>
+
+</div>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+
+<script>
+
+    $(document).ready(function () {
+        $('b[role="presentation"]').hide();
+
+    });
+    $(".js-example-data-ajax").select2({
+        ajax: {
+            url: '@Url.Action("Search", "User")',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    name: params.term, // search term
+                   page: params.page
+                };
+            },
+            processResults: function (data, params) {
+                params.page = params.page || 1;
+
+                return {
+                    results: data,
+                    pagination: {
+                        more: (params.page * 30) < data.total_count
+                    }
+                };
+            },
+            cache: true
+        },
+        placeholder: 'Search for person',
+        escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+        minimumInputLength: 1,
+        templateResult: formatRepo,
+        templateSelection: formatRepoSelection
+    });
+
+    function formatRepo(repo) {
+        if (repo.loading) {
+            return repo.text;
+        }
+        var baseUrl = '';
+        var btnText = '';
+        if (repo.IsFollowing) {
+            baseUrl = '@Url.Action("UnFollow", "User")' + "/" + repo.UserName;
+            btnText = 'UnFollow'
+        } else {
+            baseUrl = '@Url.Action("Follow","User")' + "/" + repo.UserName;
+            btnText = 'Follow'
+        }
+
+        var markup = "<div class='clearfix'>" +
+            "<div class='select2-result-repository__title'>" + repo.Name + " (" + repo.UserName + ")</div>" +
+            "<div><a id='follow-unfollow-btn' class='btn btn-sm btn-danger' href='" + baseUrl + "' role='button'>" + btnText+"</div>" +
+            "</div>";
+        return markup;
+    }
+
+    function formatRepoSelection(repo) {
+        return repo.UserName || repo.text;
+    }
+
+    $('textarea').keyup(function () {
+        var count = $(this).val().length;
+        var length = 140 - count;
+        $('#charremaining').text(length);
+    });
+
+    $("#tweet-button").click(function (event) {
+        event.preventDefault();
+        disablePage();
+        var userid = '@Request.RequestContext.HttpContext.Session["UserId"]';
+        var message = $('#tweet-message').val();
+        if (message != '')
+        {
+                $.ajax({
+                type: "POST",
+                url: '@Url.Action("SaveMessage", "User")',
+                data: { UserId: userid, Message: message, TweetId :$('#hdn-tweet-id').val() },
+                dataType: "json",
+                cache: false,
+                success: function (data) {
+                    enablePage()
+                    window.location.href = '@Url.Action("Dashboard", "User")';
+                },
+                error: function () {
+                    bootbox.alert({ message: "Error occured!!", size: 'small' });
+                }
+            });
+        } else {
+            bootbox.alert({ message: "Message field can not be empty.", size: 'small' });
+        }
+    });
+
+    $('#tbl-tweet').on('click', 'tbody .edit', function (event) {
+        var row = $(this).closest('tr');
+        var tweetid = row.find('.tweetid').text();
+
+        if ($(this).hasClass('selected')){
+            $(this).removeClass('selected')
+            $('#tweet-message').val('');
+            $('textarea').trigger('keyup');
+            $('#hdn-tweet-id').val('0');
+        } else {
+            $('#tbl-tweet tbody tr.selected').removeClass('selected');
+            $('#tweet-message').val(row.find('.message').text());
+            $('textarea').trigger('keyup');
+            $(this).addClass('selected');
+            $('#hdn-tweet-id').val(tweetid);
+        }
+    });
+
+    $('#tbl-tweet').on('click', '.delete', function (event) {
+        var result = confirm('Are you sure want to delete the tweet?')
+        disablePage();
+        if (result) {
+                var row = $(this).closest('tr');
+                var tweetid = row.find('.tweetid').text();
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("DeleteTweet", "User")',
+                    data: { tweetId: tweetid},
+                    dataType: "json",
+                    cache: false,
+                    success: function (data) {
+                        enablePage();
+                        if (data.Success)
+                            window.location.href = '@Url.Action("Dashboard", "User")';
+                        else
+                            bootbox.alert({ message: "Error occured!!", size: 'small' });
+                    },
+                    error: function () {
+                        enablePage();
+                        bootbox.alert({ message: "Error occured!!",size: 'small'});
+                    }
+                });
+            }
+    });
+
+
+</script>

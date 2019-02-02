@@ -4,14 +4,12 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="TwitterCloneDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'TwitterCloneDB.dbo.Following' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+    <Schema Namespace="TwitterCloneDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Following">
           <Key>
-            <PropertyRef Name="User_id" />
-            <PropertyRef Name="Following_id" />
+            <PropertyRef Name="Rowid" />
           </Key>
+          <Property Name="Rowid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="User_id" Type="varchar" MaxLength="25" Nullable="false" />
           <Property Name="Following_id" Type="varchar" MaxLength="25" Nullable="false" />
         </EntityType>
@@ -35,7 +33,19 @@ warning 6002: The table/view 'TwitterCloneDB.dbo.Following' does not have a prim
           <Property Name="message" Type="varchar" MaxLength="140" Nullable="false" />
           <Property Name="created" Type="datetime" Nullable="false" />
         </EntityType>
-        <Association Name="FK__tbl_Follo__Follo__1B0907CE">
+        <Association Name="FK__Following__Follo__24927208">
+          <End Role="Person" Type="Self.Person" Multiplicity="1" />
+          <End Role="Following" Type="Self.Following" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="User_id" />
+            </Principal>
+            <Dependent Role="Following">
+              <PropertyRef Name="User_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Following__User___239E4DCF">
           <End Role="Person" Type="Self.Person" Multiplicity="1" />
           <End Role="Following" Type="Self.Following" Multiplicity="*" />
           <ReferentialConstraint>
@@ -47,18 +57,6 @@ warning 6002: The table/view 'TwitterCloneDB.dbo.Following' does not have a prim
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__tbl_Follo__User___1A14E395">
-          <End Role="Person" Type="Self.Person" Multiplicity="1" />
-          <End Role="Following" Type="Self.Following" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Person">
-              <PropertyRef Name="User_id" />
-            </Principal>
-            <Dependent Role="Following">
-              <PropertyRef Name="User_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK__tbl_Tweet__user___1DE57479">
           <End Role="Person" Type="Self.Person" Multiplicity="1" />
           <End Role="Tweet" Type="Self.Tweet" Multiplicity="*" />
@@ -71,20 +69,35 @@ warning 6002: The table/view 'TwitterCloneDB.dbo.Following' does not have a prim
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="UpdateProfile" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserId" Type="varchar" Mode="In" />
+          <Parameter Name="Name" Type="varchar" Mode="In" />
+          <Parameter Name="Email" Type="varchar" Mode="In" />
+          <Parameter Name="Password" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="uspDeactivateAccount" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserId" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="uspDeleteAccount" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserId" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="uspGetTweet" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserId" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="uspInsertTweet" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserId" Type="varchar" Mode="In" />
+          <Parameter Name="Message" Type="varchar" Mode="In" />
+          <Parameter Name="TwetId" Type="varchar" Mode="In" />
+        </Function>
         <EntityContainer Name="TwitterCloneDBModelStoreContainer">
+          <EntitySet Name="Following" EntityType="Self.Following" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Person" EntityType="Self.Person" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tweet" EntityType="Self.Tweet" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Following" EntityType="Self.Following" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [Following].[User_id] AS [User_id], 
-    [Following].[Following_id] AS [Following_id]
-    FROM [dbo].[Following] AS [Following]</DefiningQuery>
-          </EntitySet>
-          <AssociationSet Name="FK__tbl_Follo__Follo__1B0907CE" Association="Self.FK__tbl_Follo__Follo__1B0907CE">
+          <AssociationSet Name="FK__Following__Follo__24927208" Association="Self.FK__Following__Follo__24927208">
             <End Role="Person" EntitySet="Person" />
             <End Role="Following" EntitySet="Following" />
           </AssociationSet>
-          <AssociationSet Name="FK__tbl_Follo__User___1A14E395" Association="Self.FK__tbl_Follo__User___1A14E395">
+          <AssociationSet Name="FK__Following__User___239E4DCF" Association="Self.FK__Following__User___239E4DCF">
             <End Role="Person" EntitySet="Person" />
             <End Role="Following" EntitySet="Following" />
           </AssociationSet>
@@ -93,11 +106,20 @@ warning 6002: The table/view 'TwitterCloneDB.dbo.Following' does not have a prim
             <End Role="Tweet" EntitySet="Tweet" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="TwitterCloneDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Following">
+          <Key>
+            <PropertyRef Name="Rowid" />
+          </Key>
+          <Property Name="Rowid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="User_id" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Following_id" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Person" Relationship="Self.FK__Following__Follo__24927208" FromRole="Following" ToRole="Person" />
+          <NavigationProperty Name="Person1" Relationship="Self.FK__Following__User___239E4DCF" FromRole="Following" ToRole="Person" />
+        </EntityType>
         <EntityType Name="Person">
           <Key>
             <PropertyRef Name="User_id" />
@@ -108,9 +130,9 @@ warning 6002: The table/view 'TwitterCloneDB.dbo.Following' does not have a prim
           <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="joined" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Active" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Followings" Relationship="Self.FK__Following__Follo__24927208" FromRole="Person" ToRole="Following" />
+          <NavigationProperty Name="Followings1" Relationship="Self.FK__Following__User___239E4DCF" FromRole="Person" ToRole="Following" />
           <NavigationProperty Name="Tweets" Relationship="Self.FK__tbl_Tweet__user___1DE57479" FromRole="Person" ToRole="Tweet" />
-          <NavigationProperty Name="Person1" Relationship="Self.Following" FromRole="Person" ToRole="Person1" />
-          <NavigationProperty Name="People" Relationship="Self.Following" FromRole="Person1" ToRole="Person" />
         </EntityType>
         <EntityType Name="Tweet">
           <Key>
@@ -122,6 +144,30 @@ warning 6002: The table/view 'TwitterCloneDB.dbo.Following' does not have a prim
           <Property Name="created" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Person" Relationship="Self.FK__tbl_Tweet__user___1DE57479" FromRole="Tweet" ToRole="Person" />
         </EntityType>
+        <Association Name="FK__Following__Follo__24927208">
+          <End Role="Person" Type="Self.Person" Multiplicity="1" />
+          <End Role="Following" Type="Self.Following" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="User_id" />
+            </Principal>
+            <Dependent Role="Following">
+              <PropertyRef Name="User_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Following__User___239E4DCF">
+          <End Role="Person" Type="Self.Person" Multiplicity="1" />
+          <End Role="Following" Type="Self.Following" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="User_id" />
+            </Principal>
+            <Dependent Role="Following">
+              <PropertyRef Name="Following_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__tbl_Tweet__user___1DE57479">
           <End Role="Person" Type="Self.Person" Multiplicity="1" />
           <End Role="Tweet" Type="Self.Tweet" Multiplicity="*" />
@@ -134,28 +180,64 @@ warning 6002: The table/view 'TwitterCloneDB.dbo.Following' does not have a prim
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="Following">
-          <End Role="Person" Type="Self.Person" Multiplicity="*" />
-          <End Role="Person1" Type="Self.Person" Multiplicity="*" />
-        </Association>
         <EntityContainer Name="TwitterCloneDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Followings" EntityType="Self.Following" />
           <EntitySet Name="People" EntityType="Self.Person" />
           <EntitySet Name="Tweets" EntityType="Self.Tweet" />
+          <AssociationSet Name="FK__Following__Follo__24927208" Association="Self.FK__Following__Follo__24927208">
+            <End Role="Person" EntitySet="People" />
+            <End Role="Following" EntitySet="Followings" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Following__User___239E4DCF" Association="Self.FK__Following__User___239E4DCF">
+            <End Role="Person" EntitySet="People" />
+            <End Role="Following" EntitySet="Followings" />
+          </AssociationSet>
           <AssociationSet Name="FK__tbl_Tweet__user___1DE57479" Association="Self.FK__tbl_Tweet__user___1DE57479">
             <End Role="Person" EntitySet="People" />
             <End Role="Tweet" EntitySet="Tweets" />
           </AssociationSet>
-          <AssociationSet Name="Following" Association="Self.Following">
-            <End Role="Person" EntitySet="People" />
-            <End Role="Person1" EntitySet="People" />
-          </AssociationSet>
+          <FunctionImport Name="uspDeleteAccount">
+          <Parameter Name="UserId" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="uspGetTweet" ReturnType="Collection(TwitterCloneDBModel.uspGetTweet_Result)">
+          <Parameter Name="UserId" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="uspInsertTweet">
+            <Parameter Name="UserId" Mode="In" Type="String" />
+            <Parameter Name="Message" Mode="In" Type="String" />
+            <Parameter Name="TwetId" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="UpdateProfile">
+            <Parameter Name="UserId" Mode="In" Type="String" />
+            <Parameter Name="Name" Mode="In" Type="String" />
+            <Parameter Name="Email" Mode="In" Type="String" />
+            <Parameter Name="Password" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="uspDeactivateAccount">
+            <Parameter Name="UserId" Mode="In" Type="String" />
+          </FunctionImport>
         </EntityContainer>
+        <ComplexType Name="uspGetTweet_Result">
+          <Property Type="Int32" Name="tweet_id" Nullable="false" />
+          <Property Type="String" Name="user_id" Nullable="false" MaxLength="25" />
+          <Property Type="String" Name="message" Nullable="false" MaxLength="140" />
+          <Property Type="DateTime" Name="created" Nullable="false" Precision="23" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="TwitterCloneDBModelStoreContainer" CdmEntityContainer="TwitterCloneDBEntities">
+          <EntitySetMapping Name="Followings">
+            <EntityTypeMapping TypeName="TwitterCloneDBModel.Following">
+              <MappingFragment StoreEntitySet="Following">
+                <ScalarProperty Name="Rowid" ColumnName="Rowid" />
+                <ScalarProperty Name="User_id" ColumnName="User_id" />
+                <ScalarProperty Name="Following_id" ColumnName="Following_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="People">
             <EntityTypeMapping TypeName="TwitterCloneDBModel.Person">
               <MappingFragment StoreEntitySet="Person">
@@ -178,14 +260,20 @@ warning 6002: The table/view 'TwitterCloneDB.dbo.Following' does not have a prim
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="Following" TypeName="TwitterCloneDBModel.Following" StoreEntitySet="Following">
-            <EndProperty Name="Person">
-              <ScalarProperty Name="User_id" ColumnName="Following_id" />
-            </EndProperty>
-            <EndProperty Name="Person1">
-              <ScalarProperty Name="User_id" ColumnName="User_id" />
-            </EndProperty>
-          </AssociationSetMapping>
+          <FunctionImportMapping FunctionImportName="uspDeleteAccount" FunctionName="TwitterCloneDBModel.Store.uspDeleteAccount" />
+          <FunctionImportMapping FunctionImportName="uspGetTweet" FunctionName="TwitterCloneDBModel.Store.uspGetTweet">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="TwitterCloneDBModel.uspGetTweet_Result">
+                <ScalarProperty Name="tweet_id" ColumnName="tweet_id" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="message" ColumnName="message" />
+                <ScalarProperty Name="created" ColumnName="created" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="uspInsertTweet" FunctionName="TwitterCloneDBModel.Store.uspInsertTweet" />
+          <FunctionImportMapping FunctionImportName="UpdateProfile" FunctionName="TwitterCloneDBModel.Store.UpdateProfile" />
+          <FunctionImportMapping FunctionImportName="uspDeactivateAccount" FunctionName="TwitterCloneDBModel.Store.uspDeactivateAccount" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

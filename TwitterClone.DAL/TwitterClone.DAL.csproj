@@ -49,6 +49,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Following.cs">
+      <DependentUpon>TwitterCloneModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Person.cs">
       <DependentUpon>TwitterCloneModel.tt</DependentUpon>
     </Compile>
@@ -71,6 +74,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>TwitterCloneModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="uspGetTweet_Result.cs">
+      <DependentUpon>TwitterCloneModel.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -84,6 +90,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="TwitterCloneModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>TwitterCloneModel.edmx</DependentUpon>
@@ -94,9 +103,6 @@
       <DependentUpon>TwitterCloneModel.edmx</DependentUpon>
       <LastGenOutput>TwitterCloneModel.cs</LastGenOutput>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

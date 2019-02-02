@@ -4,52 +4,53 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TwitterClone.DAL;
+using System.Data.Entity;
 
 namespace TwitterClone.BAL
 {
     public class TwitterCloneBO
     {
-       // private readonly MyContext _context;
-
-        //public TwitterCloneBO(MyContext context)
-        //{
-        //    _context = context;
-        //}
-
-        public bool IsUserExist(string userid)
+        public int ValidatedUser(string userId, string password)
         {
-            using (TwitterCloneDBEntities _context = new TwitterCloneDBEntities())
+            using (TwitterCloneDBEntities db = new TwitterCloneDBEntities())
             {
-                var result = _context.Persons.Find(userid);
+                var result = db.Persons.Find(userId);
 
                 if (result != null)
-                    return true;
+                { 
+                   if(result.Active)
+                    {
+                      return  (result.User_id.ToUpper() == userId.ToUpper() && result.Password == password) ? 1 : 2 ;
+                    }
+                   else
+                    {
+                        return 3;
+                    }
+                }  
                 else
-                    return false;
+                {
+                    return 0;
+                }
+                   
             }
         }
-        public bool ValidatedUser(string UserId, string Password)
+
+        public Person GetUserDetails(string userid)
         {
-            using (TwitterCloneDBEntities _context = new TwitterCloneDBEntities())
+            using (TwitterCloneDBEntities db = new TwitterCloneDBEntities())
             {
-                var result = from user in _context.Persons
-                             where user.User_id == UserId && user.Password == Password
-                             select user;
-                if (result.Count() > 0)
-                    return true;
-                else
-                    return false;
-            }           
+                return db.Persons.Find(userid);
+            }
         }
 
         public bool CreateAccount(Person item)
         {
             try
             {
-                using (TwitterCloneDBEntities _context = new TwitterCloneDBEntities())
+                using (TwitterCloneDBEntities db = new TwitterCloneDBEntities())
                 {
-                    _context.Persons.Add(item);
-                    _context.SaveChanges();
+                    db.Persons.Add(item);
+                    db.SaveChanges();
                     return true;
                 }  
             }
@@ -59,16 +60,97 @@ namespace TwitterClone.BAL
             }
         }
 
+        public void SaveTweets(Tweet item)
+        {
+            using (TwitterCloneDBEntities db = new TwitterCloneDBEntities())
+            {
+                if(item.tweet_id == 0)
+                {   
+                    db.Tweets.Add(item);
+                }
+                else
+                {
+                    Tweet twetObj = db.Tweets.Find(item.tweet_id);
+                    twetObj.message = item.message;
+                    twetObj.created = item.created;
+                }
+                db.SaveChanges();
+            }
+        }
+
+        public void DeleteTweet(int tweetId)
+        {
+            using (TwitterCloneDBEntities db = new TwitterCloneDBEntities())
+            {
+                db.Tweets.Remove(db.Tweets.Find(tweetId));
+                db.SaveChanges();
+            }
+        }
+
         public IEnumerable<Tweet> GetAllTweet(string id)
         {
-            using (TwitterCloneDBEntities _context = new TwitterCloneDBEntities())
-            {
-                var tweetList = from item in _context.Tweets
-                                where item.user_id == id
-                                select item;
+            TwitterCloneDBEntities db = new TwitterCloneDBEntities();
+            return db.Tweets.Where(x => x.user_id == id).OrderByDescending(o =>o.created);
+        }
+        public List<Following> GetAllFollowing(string userid)
+        {
+            TwitterCloneDBEntities db = new TwitterCloneDBEntities();
+            return db.Followings.Where(x => x.User_id == userid).ToList();
+        }
+        public List<Following> GetAllFollowers(string userid)
+        {
+            TwitterCloneDBEntities db = new TwitterCloneDBEntities();
+            return db.Followings.Where(x => x.Following_id == userid).ToList();
+        }
+        public void DeleteAccount(string userid)
+        {
+            using (TwitterCloneDBEntities db = new TwitterCloneDBEntities())
+            {   
+                db.uspDeleteAccount(userid);
+            }
+        }
+               
+        public void UpdateProfile(Person item)
+        {
+            using (TwitterCloneDBEntities db = new TwitterCloneDBEntities())
+            {  
+                Person personObj = db.Persons.Find(item.User_id);
+                personObj.FullName = item.FullName;
+                personObj.Email = item.Email;
+                personObj.Password = item.Password;
 
-                return tweetList;
-            } 
+                db.SaveChanges();
+            }
+        }
+
+        public List<Person>GetSearchList(string name)
+        {  
+            using (TwitterCloneDBEntities db = new TwitterCloneDBEntities())
+            {
+                 return db.Persons.Where(x => x.User_id.StartsWith(name)).ToList();
+            }
+        }
+
+        public void FollowUser(string userid,string followingId)
+        {
+            using (TwitterCloneDBEntities db = new TwitterCloneDBEntities())
+            {
+                Following obj = new Following();
+                obj.User_id = userid;
+                obj.Following_id = followingId;
+
+                db.Followings.Add(obj);
+                db.SaveChanges();
+            }
+        }
+        public void UnFollowUser(string userid, string followingId)
+        {
+            using (TwitterCloneDBEntities db = new TwitterCloneDBEntities())
+            {
+                var result = db.Followings.Where(x => x.User_id == userid && x.Following_id == followingId).FirstOrDefault();
+                db.Followings.Remove(db.Followings.Find(result.Rowid));
+                db.SaveChanges();
+            }
         }
     }
 }

@@ -6,6 +6,10 @@
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/select2")
+    @Scripts.Render("~/bundles/bootbox")
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -14,19 +18,23 @@
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                @*@Html.ActionLink("Twitter Clone", "Index", "Login", new { area = "" }, new { @class = "navbar-brand" })*@
             </div>
             <div class="navbar-collapse collapse"id="navbarNavAltMarkup">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Login",new {@class= "nav-item nav-link" })</li>
-                </ul>
+                <label id="user-name" for="name" > 
+                    Welcome @Request.RequestContext.HttpContext.Session["UserName"] (@Request.RequestContext.HttpContext.Session["UserId"])
+                </label>
             </div>
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2 search-border" type="search" placeholder="Search" aria-label="Search">
-            </form>
             <ul class="nav navbar-nav">
-                <li>@Html.ActionLink("Profile", "", "", new { @class = "nav-item nav-link" })</li>
-                <li>@Html.ActionLink("Signout", "", "", new { @class = "nav-item nav-link" })</li>
+                <li>
+                   <a class="nav-item nav-link" href="@Url.Action("Dashboard","User")">Home</a>
+                </li>
+                <li>
+                    <a class="nav-item nav-link" href="@Url.Action("EditProfile","Admin")">Profile</a>
+                </li>
+                <li>
+                    <a class="nav-item nav-link" href="@Url.Action("Signout","Login")">Signout</a>
+                </li>
+                @*<li>@Html.ActionLink("Signout", "Signout", "Login", new { @class = "nav-item nav-link" })</li>*@
             </ul>
         </div>
     </nav>
@@ -38,8 +46,7 @@
         </footer>
     </div>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
+   
     @RenderSection("scripts", required: false)
 </body>
 </html>

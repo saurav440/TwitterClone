@@ -1,0 +1,22 @@
+Controller: User
+Action Name: DeleteTweet
+Error Message: The parameters dictionary contains a null entry for parameter 'tweetId' of non-nullable type 'System.Int32' for method 'System.Web.Mvc.JsonResult DeleteTweet(Int32)' in 'TwitterClone.UI.Controllers.UserController'. An optional parameter must be a reference type, a nullable type, or be declared as an optional parameter.
+Parameter name: parameters
+Date: 01-02-2019 16:56:52
+*****************************************************
+Controller: User
+Action Name: DeleteTweet
+Error Message: The parameters dictionary contains a null entry for parameter 'tweetId' of non-nullable type 'System.Int32' for method 'System.Web.Mvc.JsonResult DeleteTweet(Int32)' in 'TwitterClone.UI.Controllers.UserController'. An optional parameter must be a reference type, a nullable type, or be declared as an optional parameter.
+Parameter name: parameters
+Date: 01-02-2019 16:57:39
+*****************************************************
+Controller: Admin
+Action Name: TwitterDashboard
+Error Message: Invalid Session.
+Date: 02-02-2019 11:09:26
+*****************************************************
+Controller: Admin
+Action Name: TwitterDashboard
+Error Message: Invalid Session.
+Date: 02-02-2019 16:02:49
+*****************************************************

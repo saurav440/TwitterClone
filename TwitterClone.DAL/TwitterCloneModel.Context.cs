@@ -12,6 +12,8 @@ namespace TwitterClone.DAL
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class TwitterCloneDBEntities : DbContext
     {
@@ -25,7 +27,73 @@ namespace TwitterClone.DAL
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<Following> Followings { get; set; }
         public virtual DbSet<Person> Persons { get; set; }
         public virtual DbSet<Tweet> Tweets { get; set; }
+    
+        public virtual int uspDeleteAccount(string userId)
+        {
+            var userIdParameter = userId != null ?
+                new ObjectParameter("UserId", userId) :
+                new ObjectParameter("UserId", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("uspDeleteAccount", userIdParameter);
+        }
+    
+        public virtual ObjectResult<uspGetTweet_Result> uspGetTweet(string userId)
+        {
+            var userIdParameter = userId != null ?
+                new ObjectParameter("UserId", userId) :
+                new ObjectParameter("UserId", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<uspGetTweet_Result>("uspGetTweet", userIdParameter);
+        }
+    
+        public virtual int uspInsertTweet(string userId, string message, string twetId)
+        {
+            var userIdParameter = userId != null ?
+                new ObjectParameter("UserId", userId) :
+                new ObjectParameter("UserId", typeof(string));
+    
+            var messageParameter = message != null ?
+                new ObjectParameter("Message", message) :
+                new ObjectParameter("Message", typeof(string));
+    
+            var twetIdParameter = twetId != null ?
+                new ObjectParameter("TwetId", twetId) :
+                new ObjectParameter("TwetId", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("uspInsertTweet", userIdParameter, messageParameter, twetIdParameter);
+        }
+    
+        public virtual int UpdateProfile(string userId, string name, string email, string password)
+        {
+            var userIdParameter = userId != null ?
+                new ObjectParameter("UserId", userId) :
+                new ObjectParameter("UserId", typeof(string));
+    
+            var nameParameter = name != null ?
+                new ObjectParameter("Name", name) :
+                new ObjectParameter("Name", typeof(string));
+    
+            var emailParameter = email != null ?
+                new ObjectParameter("Email", email) :
+                new ObjectParameter("Email", typeof(string));
+    
+            var passwordParameter = password != null ?
+                new ObjectParameter("Password", password) :
+                new ObjectParameter("Password", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("UpdateProfile", userIdParameter, nameParameter, emailParameter, passwordParameter);
+        }
+    
+        public virtual int uspDeactivateAccount(string userId)
+        {
+            var userIdParameter = userId != null ?
+                new ObjectParameter("UserId", userId) :
+                new ObjectParameter("UserId", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("uspDeactivateAccount", userIdParameter);
+        }
     }
 }

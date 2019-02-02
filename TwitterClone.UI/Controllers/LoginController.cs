@@ -8,40 +8,46 @@ using TwitterClone.BAL;
 
 namespace TwitterClone.UI.Controllers
 {
+    [HandleError]
+    [RoutePrefix("Login")]
     public class LoginController : Controller
     {
         TwitterCloneBO obj = new TwitterCloneBO();
         // GET: Login
         public ActionResult Index()
         {
-            User model = new User();
-            return View(model);
+            return View();
         }
 
         [HttpPost]
+        [Route("SignIn")]
         public ActionResult Login(string userid,string pwd)
         {
-            if(obj.IsUserExist(userid))
+            var result = obj.ValidatedUser(userid,pwd);
+
+            switch(result)
             {
-                if(obj.ValidatedUser(userid, pwd))
-                {
-                   return RedirectToAction("GetDetails");
-                }
-                else
-                {
+                case 0:
+                    ViewBag.Message = "User not exist.Plesae Signup first.";
+                    break;
+                case 1:
+                    Session["UserId"] = userid;
+                    return RedirectToAction("Dashboard", "User", new { id = userid });
+                case 2:
                     ViewBag.Message = "Invalid UserName or Password";
-                }
-            }
-            else
-            {
-                ViewBag.Message = "User not exist.";
+                    break;
+                case 3:
+                    ViewBag.Message = "Your account has been Deactivated. Do you want to activate it?";
+                    break;
             }
             return View("Index");
         }
 
-        public ActionResult GetDetails()
-        {
-            return View("tweets");
+        //[Route("Signout")]
+        public ActionResult Signout()
+        {   
+            Session.Clear();
+            return RedirectToAction("Index","Login");
         }
     }
 }
